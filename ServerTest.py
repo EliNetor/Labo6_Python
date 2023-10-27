@@ -1,4 +1,5 @@
 import sys
+import json
 
 
 def DropMenu() -> int:
@@ -12,6 +13,10 @@ def DropMenu() -> int:
 
 loop = True
 servers = []
+try:
+    serverJson = open("servers.json", "x")
+except FileExistsError:
+    serverJson = open("servers.json")
 while loop:
     try:
         if len(sys.argv) >= 2:
@@ -28,13 +33,18 @@ while loop:
             keuze = DropMenu()
         match keuze:
             case 1:
-                servers.append(input("Welke server wil je toevoegen? \n"))
+                servers.append(
+                    {"Server: " + input("Welke server wil je toevoegen? \n")}
+                )
             case 2:
-                servers.remove(input("Welke server wil je verwijderen? \n"))
+                servers.remove(
+                    {"Server: " + input("Welke server wil je verwijderen? \n")}
+                )
             case 3:
                 for s in servers:
                     print(s)
             case 4:
+                serverJson.write(json.dumps(servers))
                 sys.exit(0)
 
     except ValueError:
