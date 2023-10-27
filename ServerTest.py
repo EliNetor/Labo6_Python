@@ -12,7 +12,8 @@ def DropMenu() -> int:
 
 
 loop = True
-servers = []
+servers = {}
+jsonResult = {}
 try:
     serverJson = open("servers.json", "x")
 except FileExistsError:
@@ -33,18 +34,18 @@ while loop:
             keuze = DropMenu()
         match keuze:
             case 1:
-                servers.append(
-                    {"Server: " + input("Welke server wil je toevoegen? \n")}
-                )
+                server_name = input("Welke server wil je toevoegen? \n")
+                servers[server_name] = {}
             case 2:
-                servers.remove(
-                    {"Server: " + input("Welke server wil je verwijderen? \n")}
-                )
+                server_name = input("Welke server wil je verwijderen? \n")
+                if server_name in servers:
+                    del servers[server_name]
             case 3:
                 for s in servers:
                     print(s)
             case 4:
-                serverJson.write(json.dumps(servers))
+                with open("servers.json", "w") as serverJson:
+                    json.dump(servers, serverJson, indent=4)
                 sys.exit(0)
 
     except ValueError:
