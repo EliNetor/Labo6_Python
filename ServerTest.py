@@ -10,9 +10,20 @@ def DropMenu() -> int:
     return int(input())
 
 
-while True:
+loop = True
+while loop:
     try:
-        keuze = DropMenu()
+        if sys.argv[1] == "add":
+            keuze = 1
+            loop = False
+        elif sys.argv[1] == "remove":
+            keuze = 2
+            loop = False
+        elif sys.argv[1] == "show":
+            keuze = 3
+            loop = False
+        else:
+            keuze = DropMenu()
         match keuze:
             case 1:
                 print("Server toevoegen")
