@@ -10,14 +10,15 @@ def DropMenu() -> int:
     print("4: Exit")
     return int(input())
 
-
 loop = True
-servers = {}
 jsonResult = {}
 try:
     serverJson = open("servers.json", "x")
 except FileExistsError:
     serverJson = open("servers.json")
+
+servers = json.load(serverJson)
+
 while loop:
     try:
         if len(sys.argv) >= 2:
@@ -44,9 +45,12 @@ while loop:
                 for s in servers:
                     print(s)
             case 4:
-                with open("servers.json", "w") as serverJson:
-                    json.dump(servers, serverJson, indent=4)
-                sys.exit(0)
+                loop = False
+        if not loop:
+            with open("servers.json", "w") as serverJson:
+                json.dump(servers, serverJson, indent=4)
+            sys.exit(0)
+    
 
     except ValueError:
         print("Foute waarde")
