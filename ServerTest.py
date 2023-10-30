@@ -1,5 +1,6 @@
 import sys
 import json
+from json2html import *
 
 
 def DropMenu() -> int:
@@ -27,6 +28,12 @@ try:
     serverJson = open("servers.json", "x")
 except FileExistsError:
     serverJson = open("servers.json")
+
+try:
+    indexHtml = open("index.html", "x")
+    indexHtml = open("index.html", "w")
+except FileExistsError:
+    indexHtml = open("index.html", "w")
 
 servers = json.load(serverJson)
 mode = CheckMode()
@@ -65,6 +72,8 @@ while loop:
                 if mode != 1:
                     for s in servers:
                         print(s)
+                    html = json2html.convert(json = servers)
+                    indexHtml.write(html)
                 else:
                     print("Wrong mode!!!")
             case 4:
