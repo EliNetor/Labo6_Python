@@ -50,6 +50,7 @@ mode = CheckMode()
 
 #main program start
 loop = True
+updated = False
 while loop:
     #check if sys.argv is being used and the correct value is given
     try:
@@ -74,6 +75,7 @@ while loop:
                 if mode <= 1:
                     server_name = input("Welke server wil je toevoegen? \n")
                     servers[server_name] = {"UP": Pinger(server_name)}
+                    updated = False
                 else:
                     print("Wrong mode!!!")
             #remove server
@@ -82,6 +84,7 @@ while loop:
                     server_name = input("Welke server wil je verwijderen? \n")
                     if server_name in servers:
                         del servers[server_name]
+                    updated = False
                 else:
                     print("Wrong mode!!!")
             #check/show servers
@@ -92,12 +95,16 @@ while loop:
                         servers[s] = {"UP": Pinger(s)}
                     html = json2html.convert(json = servers)
                     indexHtml.write(html)
+                    updated = True
                 else:
                     print("Wrong mode!!!")
             #end program
             case 4:
                 loop = False
         if not loop:
+            if not updated:
+                html = json2html.convert(json = servers)
+                indexHtml.write(html)
             with open("servers.json", "w") as serverJson:
                 json.dump(servers, serverJson, indent=4)
             sys.exit(0)
