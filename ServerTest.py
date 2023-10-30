@@ -1,19 +1,26 @@
 import sys
 import json
 from json2html import *
+from ping3 import *
 
+def Pinger(ip) -> bool:
+    resp = ping(ip)
+    if resp == False:
+        return False
+    else:
+        return True
 
 def DropMenu() -> int:
     print("Maak een keuze uit de volgende opties")
     print("1: Server toevoegen")
     print("2: Server verwijderen")
-    print("3: Server lijst tonen")
+    print("3: Server lijst tonen en status van server(s) checken")
     print("4: Exit")
     return int(input())
 
 def CheckMode() -> int:
     if len(sys.argv) > 1:
-        if sys.argv[1] == "manage":
+        if sys.argv[1] == "manage": 
             return 1
         elif sys.argv[1] == "check":
             return 2 
@@ -58,7 +65,7 @@ while loop:
             case 1:
                 if mode <= 1:
                     server_name = input("Welke server wil je toevoegen? \n")
-                    servers[server_name] = {}
+                    servers[server_name] = {"UP": Pinger(server_name)}
                 else:
                     print("Wrong mode!!!")
             case 2:
@@ -72,6 +79,7 @@ while loop:
                 if mode != 1:
                     for s in servers:
                         print(s)
+                        servers[s] = {"UP": Pinger(s)}
                     html = json2html.convert(json = servers)
                     indexHtml.write(html)
                 else:
