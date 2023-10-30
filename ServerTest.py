@@ -10,6 +10,17 @@ def DropMenu() -> int:
     print("4: Exit")
     return int(input())
 
+def CheckMode() -> int:
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "manage":
+            return 1
+        elif sys.argv[1] == "check":
+            return 2 
+        else: 
+            return 0
+    else:
+        return -1
+
 loop = True
 jsonResult = {}
 try:
@@ -18,6 +29,7 @@ except FileExistsError:
     serverJson = open("servers.json")
 
 servers = json.load(serverJson)
+mode = CheckMode()
 
 while loop:
     try:
@@ -31,19 +43,30 @@ while loop:
             elif sys.argv[1] == "show":
                 keuze = 3
                 loop = False
+            else:
+                keuze = DropMenu()
         else:
             keuze = DropMenu()
         match keuze:
             case 1:
-                server_name = input("Welke server wil je toevoegen? \n")
-                servers[server_name] = {}
+                if mode <= 1:
+                    server_name = input("Welke server wil je toevoegen? \n")
+                    servers[server_name] = {}
+                else:
+                    print("Wrong mode!!!")
             case 2:
-                server_name = input("Welke server wil je verwijderen? \n")
-                if server_name in servers:
-                    del servers[server_name]
+                if mode <= 1:
+                    server_name = input("Welke server wil je verwijderen? \n")
+                    if server_name in servers:
+                        del servers[server_name]
+                else:
+                    print("Wrong mode!!!")
             case 3:
-                for s in servers:
-                    print(s)
+                if mode != 1:
+                    for s in servers:
+                        print(s)
+                else:
+                    print("Wrong mode!!!")
             case 4:
                 loop = False
         if not loop:
